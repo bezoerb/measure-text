@@ -1,9 +1,9 @@
 {
-  "name": "measuretext",
+  "name": "measure-text",
   "version": "0.0.0",
   "description": "My swell module",
   "license": "MIT",
-  "repository": "bezoerb/measuretext",
+  "repository": "bezoerb/measure-text",
   "author": {
     "name": "Ben Zörb",
     "email": "ben@sommerlaune.com",
@@ -15,7 +15,7 @@
   },
   "scripts": {
     "test": "nyc ava",
-    "compile": "browserify src/index.js -s measureText -t babelify --outfile measureText.js",
+    "compile": "browserify src/index.js -s measureText -t babelify --outfile measure-text.js",
     "prepublish": "npm run compile"
   },
   "files": [

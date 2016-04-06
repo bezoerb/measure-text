@@ -1,4 +1,4 @@
-# measuretext [![Build Status](https://travis-ci.org/bezoerb/measuretext.svg?branch=master)](https://travis-ci.org/bezoerb/measuretext)
+# measure-text [![Build Status](https://travis-ci.org/bezoerb/measuretext.svg?branch=master)](https://travis-ci.org/bezoerb/measuretext)
 
 > Get text width based on styles for a given element *alpha*
 
@@ -8,7 +8,7 @@
 
 ```html
 <h1></h1>
-<script src="measureText.js"></script>
+<script src="measure-text.js"></script>
 <script>
 var h1 = document.querySelector('h1');
 measureText.width('unicorns',h1);
@@ -20,7 +20,7 @@ measureText.width('unicorns',h1);
 
 ## API
 
-### measuretext(text, element, [options])
+### measureText.width(text, element, [options])
 
 #### text
 
