@@ -4,21 +4,14 @@
 var fs = require('fs');
 var path = require('path');
 var css = fs.readFileSync(path.join(__dirname,'../fixtures/bootstrap.css'),'utf8');
+var html =  fs.readFileSync(path.join(__dirname,'../fixtures/test.html'),'utf8');
 
-global.document = require('jsdom').jsdom('<h1>Test</h1><p>Test2</p>');
+global.document = require('jsdom').jsdom(html);
 global.window = document.defaultView;
 
-var h1 = document.querySelector('h1');
-
-
-
+// append css
 var head = global.document.getElementsByTagName('head')[0];
 style = global.document.createElement("style");
 style.type = 'text/css';
 style.innerHTML = css;
 head.appendChild(style);
-
-var styles = window.getComputedStyle(h1);
-
-console.log(styles);
-console.log(styles.getPropertyValue('font-size'));
