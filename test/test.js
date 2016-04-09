@@ -1,18 +1,34 @@
 import '../node_modules/babel-core/register';
 import test from 'ava';
-import measure from '../src/index';
+import {width, maxFontSize} from '../src/index';
 
-test('Computes width', t => {
+test('Compute width for h1', t => {
     let el = document.querySelector('h1');
-    t.is(Math.floor(measure('unicorns', {element: el}).width()), 136);
+    t.is(Math.floor(width('TEST', el)), 92);
+});
+
+test('Compute width for h2', t => {
+    let el = document.querySelector('h2');
+    t.is(Math.floor(width('TEST', el)), 48);
+});
+
+test('Compute width for h3', t => {
+    let el = document.querySelector('h3');
+    t.is(Math.floor(width('test unicorns', el)), 136);
 });
 
 test('Computes width', t => {
     let el = document.querySelector('h1');
-    let v1 = measure('-', {element: el}).width();
-    let v2 = measure('--', {element: el}).width();
-    let v3 = measure('---', {element: el}).width();
+    let v1 = width('-', el);
+    let v2 = width('--', el);
+    let v3 = width('---', el);
 
     t.truthy(v1 < v2 < v3);
 });
 
+
+test('Computes maxFontSize', t => {
+    let el = document.querySelector('#max-font-size');
+
+    t.is(maxFontSize('unicorn', {element: el, width: '600px'}), '183px');
+});

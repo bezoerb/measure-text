@@ -367,69 +367,7 @@ function coerce(val) {
   return val;
 }
 
-},{"ms":16}],3:[function(require,module,exports){
-var root = require('./_root');
-
-/** Built-in value references. */
-var Symbol = root.Symbol;
-
-module.exports = Symbol;
-
-},{"./_root":8}],4:[function(require,module,exports){
-/**
- * Checks if `value` is a global object.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {null|Object} Returns `value` if it's a global object, else `null`.
- */
-function checkGlobal(value) {
-  return (value && value.Object === Object) ? value : null;
-}
-
-module.exports = checkGlobal;
-
-},{}],5:[function(require,module,exports){
-var stringToArray = require('./_stringToArray'),
-    toString = require('./toString');
-
-/** Used to compose unicode character classes. */
-var rsAstralRange = '\\ud800-\\udfff',
-    rsComboMarksRange = '\\u0300-\\u036f\\ufe20-\\ufe23',
-    rsComboSymbolsRange = '\\u20d0-\\u20f0',
-    rsVarRange = '\\ufe0e\\ufe0f';
-
-/** Used to compose unicode capture groups. */
-var rsZWJ = '\\u200d';
-
-/** Used to detect strings with [zero-width joiners or code points from the astral planes](http://eev.ee/blog/2015/09/12/dark-corners-of-unicode/). */
-var reHasComplexSymbol = RegExp('[' + rsZWJ + rsAstralRange  + rsComboMarksRange + rsComboSymbolsRange + rsVarRange + ']');
-
-/**
- * Creates a function like `_.lowerFirst`.
- *
- * @private
- * @param {string} methodName The name of the `String` case method to use.
- * @returns {Function} Returns the new function.
- */
-function createCaseFirst(methodName) {
-  return function(string) {
-    string = toString(string);
-
-    var strSymbols = reHasComplexSymbol.test(string)
-      ? stringToArray(string)
-      : undefined;
-
-    var chr = strSymbols ? strSymbols[0] : string.charAt(0),
-        trailing = strSymbols ? strSymbols.slice(1).join('') : string.slice(1);
-
-    return chr[methodName]() + trailing;
-  };
-}
-
-module.exports = createCaseFirst;
-
-},{"./_stringToArray":9,"./toString":14}],6:[function(require,module,exports){
+},{"ms":7}],3:[function(require,module,exports){
 /* Built-in method references for those with the same name as other `lodash` methods. */
 var nativeGetPrototype = Object.getPrototypeOf;
 
@@ -446,7 +384,7 @@ function getPrototype(value) {
 
 module.exports = getPrototype;
 
-},{}],7:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 /**
  * Checks if `value` is a host object in IE < 9.
  *
@@ -468,117 +406,7 @@ function isHostObject(value) {
 
 module.exports = isHostObject;
 
-},{}],8:[function(require,module,exports){
-(function (global){
-var checkGlobal = require('./_checkGlobal');
-
-/** Used to determine if values are of the language type `Object`. */
-var objectTypes = {
-  'function': true,
-  'object': true
-};
-
-/** Detect free variable `exports`. */
-var freeExports = (objectTypes[typeof exports] && exports && !exports.nodeType)
-  ? exports
-  : undefined;
-
-/** Detect free variable `module`. */
-var freeModule = (objectTypes[typeof module] && module && !module.nodeType)
-  ? module
-  : undefined;
-
-/** Detect free variable `global` from Node.js. */
-var freeGlobal = checkGlobal(freeExports && freeModule && typeof global == 'object' && global);
-
-/** Detect free variable `self`. */
-var freeSelf = checkGlobal(objectTypes[typeof self] && self);
-
-/** Detect free variable `window`. */
-var freeWindow = checkGlobal(objectTypes[typeof window] && window);
-
-/** Detect `this` as the global object. */
-var thisGlobal = checkGlobal(objectTypes[typeof this] && this);
-
-/**
- * Used as a reference to the global object.
- *
- * The `this` value is used if it's the global object to avoid Greasemonkey's
- * restricted `window` object, otherwise the `window` object is used.
- */
-var root = freeGlobal ||
-  ((freeWindow !== (thisGlobal && thisGlobal.window)) && freeWindow) ||
-    freeSelf || thisGlobal || Function('return this')();
-
-module.exports = root;
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./_checkGlobal":4}],9:[function(require,module,exports){
-/** Used to compose unicode character classes. */
-var rsAstralRange = '\\ud800-\\udfff',
-    rsComboMarksRange = '\\u0300-\\u036f\\ufe20-\\ufe23',
-    rsComboSymbolsRange = '\\u20d0-\\u20f0',
-    rsVarRange = '\\ufe0e\\ufe0f';
-
-/** Used to compose unicode capture groups. */
-var rsAstral = '[' + rsAstralRange + ']',
-    rsCombo = '[' + rsComboMarksRange + rsComboSymbolsRange + ']',
-    rsFitz = '\\ud83c[\\udffb-\\udfff]',
-    rsModifier = '(?:' + rsCombo + '|' + rsFitz + ')',
-    rsNonAstral = '[^' + rsAstralRange + ']',
-    rsRegional = '(?:\\ud83c[\\udde6-\\uddff]){2}',
-    rsSurrPair = '[\\ud800-\\udbff][\\udc00-\\udfff]',
-    rsZWJ = '\\u200d';
-
-/** Used to compose unicode regexes. */
-var reOptMod = rsModifier + '?',
-    rsOptVar = '[' + rsVarRange + ']?',
-    rsOptJoin = '(?:' + rsZWJ + '(?:' + [rsNonAstral, rsRegional, rsSurrPair].join('|') + ')' + rsOptVar + reOptMod + ')*',
-    rsSeq = rsOptVar + reOptMod + rsOptJoin,
-    rsSymbol = '(?:' + [rsNonAstral + rsCombo + '?', rsCombo, rsRegional, rsSurrPair, rsAstral].join('|') + ')';
-
-/** Used to match [string symbols](https://mathiasbynens.be/notes/javascript-unicode). */
-var reComplexSymbol = RegExp(rsFitz + '(?=' + rsFitz + ')|' + rsSymbol + rsSeq, 'g');
-
-/**
- * Converts `string` to an array.
- *
- * @private
- * @param {string} string The string to convert.
- * @returns {Array} Returns the converted array.
- */
-function stringToArray(string) {
-  return string.match(reComplexSymbol);
-}
-
-module.exports = stringToArray;
-
-},{}],10:[function(require,module,exports){
-var toString = require('./toString'),
-    upperFirst = require('./upperFirst');
-
-/**
- * Converts the first character of `string` to upper case and the remaining
- * to lower case.
- *
- * @static
- * @memberOf _
- * @since 3.0.0
- * @category String
- * @param {string} [string=''] The string to capitalize.
- * @returns {string} Returns the capitalized string.
- * @example
- *
- * _.capitalize('FRED');
- * // => 'Fred'
- */
-function capitalize(string) {
-  return upperFirst(toString(string).toLowerCase());
-}
-
-module.exports = capitalize;
-
-},{"./toString":14,"./upperFirst":15}],11:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 /**
  * Checks if `value` is object-like. A value is object-like if it's not `null`
  * and has a `typeof` result of "object".
@@ -609,7 +437,7 @@ function isObjectLike(value) {
 
 module.exports = isObjectLike;
 
-},{}],12:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 var getPrototype = require('./_getPrototype'),
     isHostObject = require('./_isHostObject'),
     isObjectLike = require('./isObjectLike');
@@ -681,121 +509,7 @@ function isPlainObject(value) {
 
 module.exports = isPlainObject;
 
-},{"./_getPrototype":6,"./_isHostObject":7,"./isObjectLike":11}],13:[function(require,module,exports){
-var isObjectLike = require('./isObjectLike');
-
-/** `Object#toString` result references. */
-var symbolTag = '[object Symbol]';
-
-/** Used for built-in method references. */
-var objectProto = Object.prototype;
-
-/**
- * Used to resolve the
- * [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
- * of values.
- */
-var objectToString = objectProto.toString;
-
-/**
- * Checks if `value` is classified as a `Symbol` primitive or object.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is correctly classified,
- *  else `false`.
- * @example
- *
- * _.isSymbol(Symbol.iterator);
- * // => true
- *
- * _.isSymbol('abc');
- * // => false
- */
-function isSymbol(value) {
-  return typeof value == 'symbol' ||
-    (isObjectLike(value) && objectToString.call(value) == symbolTag);
-}
-
-module.exports = isSymbol;
-
-},{"./isObjectLike":11}],14:[function(require,module,exports){
-var Symbol = require('./_Symbol'),
-    isSymbol = require('./isSymbol');
-
-/** Used as references for various `Number` constants. */
-var INFINITY = 1 / 0;
-
-/** Used to convert symbols to primitives and strings. */
-var symbolProto = Symbol ? Symbol.prototype : undefined,
-    symbolToString = symbolProto ? symbolProto.toString : undefined;
-
-/**
- * Converts `value` to a string if it's not one. An empty string is returned
- * for `null` and `undefined` values. The sign of `-0` is preserved.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to process.
- * @returns {string} Returns the string.
- * @example
- *
- * _.toString(null);
- * // => ''
- *
- * _.toString(-0);
- * // => '-0'
- *
- * _.toString([1, 2, 3]);
- * // => '1,2,3'
- */
-function toString(value) {
-  // Exit early for strings to avoid a performance hit in some environments.
-  if (typeof value == 'string') {
-    return value;
-  }
-  if (value == null) {
-    return '';
-  }
-  if (isSymbol(value)) {
-    return symbolToString ? symbolToString.call(value) : '';
-  }
-  var result = (value + '');
-  return (result == '0' && (1 / value) == -INFINITY) ? '-0' : result;
-}
-
-module.exports = toString;
-
-},{"./_Symbol":3,"./isSymbol":13}],15:[function(require,module,exports){
-var createCaseFirst = require('./_createCaseFirst');
-
-/**
- * Converts the first character of `string` to upper case.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category String
- * @param {string} [string=''] The string to convert.
- * @returns {string} Returns the converted string.
- * @example
- *
- * _.upperFirst('fred');
- * // => 'Fred'
- *
- * _.upperFirst('FRED');
- * // => 'FRED'
- */
-var upperFirst = createCaseFirst('toUpperCase');
-
-module.exports = upperFirst;
-
-},{"./_createCaseFirst":5}],16:[function(require,module,exports){
+},{"./_getPrototype":3,"./_isHostObject":4,"./isObjectLike":5}],7:[function(require,module,exports){
 /**
  * Helpers.
  */
@@ -922,65 +636,31 @@ function plural(ms, n, name) {
   return Math.ceil(ms / n) + ' ' + name + 's';
 }
 
-},{}],17:[function(require,module,exports){
-(function (global, factory) {
-  if (typeof define === "function" && define.amd) {
-    define(['module', './lib/width', './lib/max-font-size'], factory);
-  } else if (typeof exports !== "undefined") {
-    factory(module, require('./lib/width'), require('./lib/max-font-size'));
-  } else {
-    var mod = {
-      exports: {}
-    };
-    factory(mod, global.width, global.maxFontSize);
-    global.index = mod.exports;
-  }
-})(this, function (module, _width, _maxFontSize) {
-  'use strict';
-
-  var _width2 = _interopRequireDefault(_width);
-
-  var _maxFontSize2 = _interopRequireDefault(_maxFontSize);
-
-  function _interopRequireDefault(obj) {
-    return obj && obj.__esModule ? obj : {
-      default: obj
-    };
-  }
-
-  //
-  // console.log(maxFontSize);
-
-  module.exports.width = _width2.default;
-  module.exports.maxFontSize = _maxFontSize2.default;
-});
-
-},{"./lib/max-font-size":18,"./lib/width":20}],18:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(['exports', './width', './utils', 'debug', 'lodash/isPlainObject'], factory);
+        define(['exports', './utils', 'lodash/isPlainObject', 'debug'], factory);
     } else if (typeof exports !== "undefined") {
-        factory(exports, require('./width'), require('./utils'), require('debug'), require('lodash/isPlainObject'));
+        factory(exports, require('./utils'), require('lodash/isPlainObject'), require('debug'));
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod.exports, global.width, global.utils, global.debug, global.isPlainObject);
-        global.maxFontSize = mod.exports;
+        factory(mod.exports, global.utils, global.isPlainObject, global.debug);
+        global.index = mod.exports;
     }
-})(this, function (exports, _width, _utils, _debug, _isPlainObject) {
+})(this, function (exports, _utils, _isPlainObject, _debug) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
         value: true
     });
-    exports.default = maxFontSize;
-
-    var _width2 = _interopRequireDefault(_width);
-
-    var _debug2 = _interopRequireDefault(_debug);
+    exports.width = width;
+    exports.maxFontSize = maxFontSize;
 
     var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
+
+    var _debug2 = _interopRequireDefault(_debug);
 
     function _interopRequireDefault(obj) {
         return obj && obj.__esModule ? obj : {
@@ -988,11 +668,45 @@ function plural(ms, n, name) {
         };
     }
 
-    /**
-     * Created by ben on 08.04.16.
-     */
+    try {
+        var ctx = document.createElement('canvas').getContext('2d');
+    } catch (error) {
+        (0, _debug2.default)('measure-text:init')(error.message || error);
+        throw new Error('Canvas support required');
+    }
 
-    var debug = (0, _debug2.default)('measure-text:max-font-size');
+    function parseOptions(options) {
+        if (options && (0, _utils.isElement)(options)) {
+            return { element: options };
+        } else if (options && (0, _utils.isElement)(options.element)) {
+            return options;
+        }
+
+        throw new Error('Missing element');
+    }
+
+    /**
+     * Compute Text Metrics based for given text
+     *
+     * @param {string} text
+     * @param {object|Element} options
+     * @returns {function}
+     */
+    function width(text, options) {
+        var debug = (0, _debug2.default)('measure-text:width');
+        options = parseOptions(options);
+
+        var style = (0, _utils.getStyle)(options);
+        var styledText = (0, _utils.getStyledText)(text, style);
+
+        ctx.font = (0, _utils.prop)(options, 'font', null) || (0, _utils.getFont)(style, options);
+        debug('Font declaration:', ctx.font);
+
+        var metrics = ctx.measureText(styledText);
+        debug(styledText, metrics.width + 'px');
+
+        return metrics.width;
+    }
 
     /**
      * Compute Text Metrics based for given text
@@ -1001,31 +715,50 @@ function plural(ms, n, name) {
      */
 
     function maxFontSize(text, options) {
-        var el = prop(options, 'element');
-        if (!(0, _isPlainObject2.default)(options)) {
-            el = options;
-            options = { element: el };
-        }
+        var debug = (0, _debug2.default)('measure-text:max-font-size');
+        options = parseOptions(options);
+
+        // add computed style to options to prevent multiple expensive getComputedStyle calls
         options.style = (0, _utils.getStyle)(options);
 
-        var max = prop(el, 'offsetWidth') || prop(options, 'width', 0);
-        debug('Computing maxFontSize for width: ' + max + 'px');
+        // simple compute function which adds the size and computes the with
+        var compute = function compute(size) {
+            options['font-size'] = size + 'px';
+            return width(text, options);
+        };
 
-        var size = Math.floor(parseInt(max, 10) / 3);
-        options['font-size'] = size + 'px';
+        // get max width
+        var max = parseInt((0, _utils.prop)(options, 'width') || (0, _utils.prop)(options.element, 'offsetWidth', 0), 10);
+        debug('Computing maxFontSize for width: ' + max);
 
-        var cur = (0, _width2.default)(text, options);
+        // start with half the max size
+        var size = Math.floor(max / 2);
+        var cur = compute(size);
+        debug('1st round:', size + 'px', cur);
+
+        // compute next result based on first result
+        size = Math.floor(size / cur * max);
+        cur = compute(size);
+        debug('2nd round:', size + 'px', cur);
+
+        // happy cause we got it already
+        if (Math.ceil(cur) === max) {
+            debug('Computed: ' + size + 'px');
+            return size + 'px';
+        }
+
+        // go on by increase/decrease pixels
         if (cur > max && size > 0) {
-            while (cur > max) {
-                options['font-size'] = size-- + 'px';
-                cur = (0, _width2.default)(text, options);
+            while (cur > max && size > 0) {
+                cur = compute(size--);
+                debug('following round:', size + 'px', cur);
             }
             debug('Computed: ' + size + 'px');
             return size + 'px';
         } else {
             while (cur < max) {
-                options['font-size'] = size++ + 'px';
-                cur = (0, _width2.default)(text, options);
+                cur = compute(size++);
+                debug('following round:', size + 'px', cur);
             }
             size--;
             debug('Computed: ' + size + 'px');
@@ -1034,20 +767,20 @@ function plural(ms, n, name) {
     }
 });
 
-},{"./utils":19,"./width":20,"debug":1,"lodash/isPlainObject":12}],19:[function(require,module,exports){
+},{"./utils":9,"debug":1,"lodash/isPlainObject":6}],9:[function(require,module,exports){
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(['exports', 'lodash/isPlainObject', 'lodash/capitalize'], factory);
+        define(['exports'], factory);
     } else if (typeof exports !== "undefined") {
-        factory(exports, require('lodash/isPlainObject'), require('lodash/capitalize'));
+        factory(exports);
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod.exports, global.isPlainObject, global.capitalize);
+        factory(mod.exports);
         global.utils = mod.exports;
     }
-})(this, function (exports, _isPlainObject, _capitalize) {
+})(this, function (exports) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
@@ -1056,19 +789,20 @@ function plural(ms, n, name) {
     exports.getFont = getFont;
     exports.isCSSStyleDeclaration = isCSSStyleDeclaration;
     exports.canGetComputedStyle = canGetComputedStyle;
+    exports.isElement = isElement;
     exports.getStyle = getStyle;
     exports.getStyledText = getStyledText;
     exports.prop = prop;
 
-    var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
+    var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+        return typeof obj;
+    } : function (obj) {
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
+    };
 
-    var _capitalize2 = _interopRequireDefault(_capitalize);
-
-    function _interopRequireDefault(obj) {
-        return obj && obj.__esModule ? obj : {
-            default: obj
-        };
-    }
+    /**
+     * Created by ben on 08.04.16.
+     */
 
     /**
      * Map css styles to canvas font property
@@ -1079,9 +813,6 @@ function plural(ms, n, name) {
      * @param {CSSStyleDeclaration} style
      * @param {object} options
      * @returns {string}
-     */
-    /**
-     * Created by ben on 08.04.16.
      */
     function getFont(style, options) {
         var font = [];
@@ -1122,6 +853,18 @@ function plural(ms, n, name) {
     }
 
     /**
+     * Returns true if it is a DOM element
+     *
+     * @param o
+     * @retutns {bool}
+     */
+
+    function isElement(o) {
+        return (typeof HTMLElement === 'undefined' ? 'undefined' : _typeof(HTMLElement)) === "object" ? o instanceof HTMLElement : //DOM2
+        o && (typeof o === 'undefined' ? 'undefined' : _typeof(o)) === "object" && o !== null && o.nodeType === 1 && typeof o.nodeName === "string";
+    }
+
+    /**
      * Get style declaration if available
      *
      * @returns {CSSStyleDeclaration}
@@ -1131,7 +874,7 @@ function plural(ms, n, name) {
             return options.style;
         }
 
-        var el = (0, _isPlainObject2.default)(options) ? options.element : options;
+        var el = options && isElement(options.element) && options.element;
         if (canGetComputedStyle(el)) {
             return window.getComputedStyle(el, prop(options, 'pseudoElt', null));
         }
@@ -1154,8 +897,6 @@ function plural(ms, n, name) {
                 return text.toUpperCase();
             case 'lowercase':
                 return text.toLowerCase();
-            case 'capitalize':
-                return (0, _capitalize2.default)(text);
             default:
                 return text;
         }
@@ -1166,77 +907,5 @@ function plural(ms, n, name) {
     }
 });
 
-},{"lodash/capitalize":10,"lodash/isPlainObject":12}],20:[function(require,module,exports){
-(function (global, factory) {
-    if (typeof define === "function" && define.amd) {
-        define(['exports', './utils', 'lodash/isPlainObject', 'debug'], factory);
-    } else if (typeof exports !== "undefined") {
-        factory(exports, require('./utils'), require('lodash/isPlainObject'), require('debug'));
-    } else {
-        var mod = {
-            exports: {}
-        };
-        factory(mod.exports, global.utils, global.isPlainObject, global.debug);
-        global.width = mod.exports;
-    }
-})(this, function (exports, _utils, _isPlainObject, _debug) {
-    /**
-     * Created by ben on 05.04.16.
-     */
-    /*eslint-env node, browser */
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.default = width;
-
-    var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
-
-    var _debug2 = _interopRequireDefault(_debug);
-
-    function _interopRequireDefault(obj) {
-        return obj && obj.__esModule ? obj : {
-            default: obj
-        };
-    }
-
-    var debug = (0, _debug2.default)('measure-text:width');
-
-    try {
-        var ctx = document.createElement('canvas').getContext('2d');
-    } catch (error) {
-        debug(error.message || error);
-        throw new Error('Canvas support required');
-    }
-
-    /**
-     * Compute Text Metrics based for given text
-     *
-     * @param {string} text
-     * @param {object} options
-     * @returns {function}
-     */
-
-    function width(text, options) {
-        var el = (0, _utils.prop)(options, 'element');
-        if (!(0, _isPlainObject2.default)(options)) {
-            el = options;
-            options = { element: el };
-        }
-
-        var style = (0, _utils.getStyle)(options);
-        var styledText = (0, _utils.getStyledText)(text, style);
-
-        ctx.font = (0, _utils.prop)(options, 'font', null) || (0, _utils.getFont)(style, options);
-        debug('Font declaration:', ctx.font);
-
-        var metrics = ctx.measureText(styledText);
-        debug(text, metrics.width + 'px');
-
-        return metrics.width;
-    }
-});
-
-},{"./utils":19,"debug":1,"lodash/isPlainObject":12}]},{},[17])(17)
+},{}]},{},[8])(8)
 });

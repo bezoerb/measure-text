@@ -4,19 +4,42 @@
     <meta charset="UTF-8">
     <title>Testpage</title>
     <link rel="stylesheet" href="bootstrap.css">
-    <script src="../../measure-text.js"></script>
+    <script src="../../dist/measure-text.js"></script>
+    <style>
+        /* used for the tests as jsdom's getComputedStyle does not compute inherited values */
+        * {
+            font-family: Helvetica, Arial, sans-serif;
+        }
+
+        /* so we can check values in the browser ;) */
+        h1,h2,h3 {
+            display: inline;
+        }
+
+        h1 {
+            text-transform: uppercase;
+        }
+
+        h2 {
+            text-transform: lowercase;
+        }
+
+        #max-font-size {
+            width: 600px;
+        }
+    </style>
 </head>
 <body>
-<h1><span>TEST</span></h1>
+<h1>TEST</h1>
 <canvas id="h1"></canvas>
 
-<p><span>TEST</span></p>
+<h2>TEST</h2>
+<h3>test unicorns</h3>
 
-<div style="width: 600px">unicorn</div>
+<div id="max-font-size">unicorn</div>
 
-<div style="width: 550px" id="test">unicorn</div>
 <script>
-    var el = document.querySelector('#test');
+    var el = document.querySelector('#max-font-size');
     var fs = measureText.maxFontSize('unicorn',el);
     el.style['font-size'] = fs;
 </script>

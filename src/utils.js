@@ -1,8 +1,6 @@
 /**
  * Created by ben on 08.04.16.
  */
-import isPlainObject from 'lodash/isPlainObject';
-import capitalize from 'lodash/capitalize';
 
 /**
  * Map css styles to canvas font property
@@ -53,6 +51,20 @@ export function canGetComputedStyle(el) {
 }
 
 /**
+ * Returns true if it is a DOM element
+ *
+ * @param o
+ * @retutns {bool}
+ */
+
+export function isElement(o){
+    return (
+        typeof HTMLElement === "object" ? o instanceof HTMLElement : //DOM2
+        o && typeof o === "object" && o !== null && o.nodeType === 1 && typeof o.nodeName==="string"
+    );
+}
+
+/**
  * Get style declaration if available
  *
  * @returns {CSSStyleDeclaration}
@@ -62,7 +74,8 @@ export function getStyle(options) {
         return options.style;
     }
 
-    let el = isPlainObject(options) ? options.element : options;
+
+    let el = options && isElement(options.element) && options.element;
     if (canGetComputedStyle(el)) {
         return window.getComputedStyle(el, prop(options, 'pseudoElt', null));
     }
@@ -83,8 +96,6 @@ export function getStyledText(text,style) {
             return text.toUpperCase();
         case 'lowercase':
             return text.toLowerCase();
-        case 'capitalize':
-            return capitalize(text);
         default:
             return text;
     }
