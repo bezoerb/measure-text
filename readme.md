@@ -1,6 +1,6 @@
 # measure-text [![Build Status](https://travis-ci.org/bezoerb/measuretext.svg?branch=master)](https://travis-ci.org/bezoerb/measuretext)
 
-> Get text width based on styles for a given element *alpha*
+> In-Memory text measurement using canvas *alpha*
 
 
 ## Usage

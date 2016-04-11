@@ -1,0 +1,26 @@
+{
+  "name": "measure-text",
+  "description": "In-memory text measurement using canvas",
+  "main": "dist/measure-text.js",
+  "authors": [
+    "Ben Zörb <ben@sommerlaune.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "text",
+    "canvas",
+    "measure"
+  ],
+  "homepage": "https://github.com/bezoerb/measure-text",
+  "moduleType": [
+    "amd",
+    "globals"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

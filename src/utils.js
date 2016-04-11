@@ -1,7 +1,7 @@
 /**
  * Created by ben on 08.04.16.
  */
-
+import debugFn from 'debug';
 /**
  * Map css styles to canvas font property
  *
@@ -13,7 +13,14 @@
  * @returns {string}
  */
 export function getFont(style, options) {
+    let debug = debugFn('measure-text:getFont');
     let font = [];
+
+    let fontWeight = prop(options,'font-weight',style.getPropertyValue('font-weight'));
+    debug(fontWeight);
+    if (['normal', 'bold', 'bolder', 'lighter', '100', '200', '300', '400', '500', '600', '700', '800', '900'].indexOf(fontWeight) !== -1) {
+        font.push(fontWeight);
+    }
 
     let fontStyle = prop(options,'font-style',style.getPropertyValue('font-style'));
     if (['normal', 'italic', 'oblique'].indexOf(fontStyle) !== -1) {
@@ -25,16 +32,22 @@ export function getFont(style, options) {
         font.push(fontVariant);
     }
 
-    let fontWeight = prop(options,'font-weight',style.getPropertyValue('font-weight'));
-    if (['normal', 'bold', 'bolder', 'lighter', 100, 200, 300, 400, 500, 600, 700, 800, 900].indexOf(fontWeight) !== -1) {
-        font.push(fontWeight);
-    }
+
 
     let fontSize = prop(options,'font-size',style.getPropertyValue('font-size'));
-    if (/r?em/.test(fontSize)) {
-        fontSize = parseInt(fontSize,10) * 16 + 'px';
+    let fontSizeValue = parseFloat(fontSize);
+    let fontSizeUnit =fontSize.replace(fontSizeValue,'');
+    switch (fontSizeUnit) {
+        case 'rem':
+        case 'em':
+            fontSizeValue *= 16;
+            break;
+        case 'pt':
+            fontSizeValue /= .75;
+            break;
     }
-    font.push(fontSize);
+
+    font.push(fontSizeValue + 'px');
 
     let fontFamily = prop(options,'font-family',style.getPropertyValue('font-family'));
     font.push(fontFamily);

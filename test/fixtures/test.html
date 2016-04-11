@@ -6,14 +6,12 @@
     <link rel="stylesheet" href="bootstrap.css">
     <script src="../../dist/measure-text.js"></script>
     <style>
-        /* used for the tests as jsdom's getComputedStyle does not compute inherited values */
-        * {
-            font-family: Helvetica, Arial, sans-serif;
-        }
 
+        /* used for the tests as jsdom's getComputedStyle does not compute inherited values */
         /* so we can check values in the browser ;) */
-        h1,h2,h3 {
+        div,h1,h2,h3 {
             display: inline;
+            font-family: Helvetica, Arial, sans-serif;
         }
 
         h1 {
@@ -24,8 +22,17 @@
             text-transform: lowercase;
         }
 
+        h3 {
+            font-style: italic;
+        }
+
         #max-font-size {
             width: 600px;
+        }
+
+
+        #fullwidth {
+            width: 100%;
         }
     </style>
 </head>
@@ -36,20 +43,37 @@
 <h2>TEST</h2>
 <h3>test unicorns</h3>
 
-<div id="max-font-size">unicorn</div>
+<div id="max-font-size" class="fit-text">unicorn</div>
 
+<div id="fullwidth" class="fit-text"><span>Scales to full width</span></div>
+<canvas id="fullwidth-canvas"></canvas>
 <script>
-    var el = document.querySelector('#max-font-size');
-    var fs = measureText.maxFontSize('unicorn',el);
-    el.style['font-size'] = fs;
+    var elements = document.querySelectorAll('.fit-text');
+    Array.prototype.slice.call(elements).forEach(function(el) {
+        el.style['font-size'] = measureText.maxFontSize(el.innerText,{
+            element:el,
+            width: document.documentElement.offsetWidth - 5
+        });
+    });
+
+
+
 </script>
 
 <script>
     var canvas = document.getElementById('h1');
     var ctx = canvas.getContext('2d');
-    ctx.font = 'normal normal normal 36px \'Helvetica Neue\', Helvetica, Arial, sans-serif';
+    ctx.font = 'italic 100  small-caps 24px Helvetica,Arial,sans-serif';
 
-    ctx.fillText('TEST', 0, 32);
+    ctx.fillText('test unicorns', 0, 32);
+
+    var canvas2 = document.getElementById('fullwidth-canvas');
+    canvas2.width  = 1280;
+    canvas2.height = 200;
+    var ctx2 = canvas2.getContext('2d');
+    ctx2.font = '108px Arial,sans-serif';
+
+    ctx2.fillText('Scales to full width', 0, 134);
 </script>
 
 </body>

@@ -1,5 +1,4 @@
 import {prop, isElement, getStyle, getStyledText, getFont} from './utils';
-import isPlainObject from 'lodash/isPlainObject';
 import debugFn from 'debug';
 
 try {
@@ -35,10 +34,9 @@ export function width(text, options) {
     let styledText = getStyledText(text, style);
 
     ctx.font = prop(options, 'font', null) || getFont(style, options);
-    debug('Font declaration:', ctx.font);
 
     let metrics = ctx.measureText(styledText);
-    debug(styledText, metrics.width + 'px');
+    debug(styledText, metrics.width + 'px','Font declaration:', ctx.font);
 
     return metrics.width;
 }

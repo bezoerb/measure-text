@@ -367,149 +367,7 @@ function coerce(val) {
   return val;
 }
 
-},{"ms":7}],3:[function(require,module,exports){
-/* Built-in method references for those with the same name as other `lodash` methods. */
-var nativeGetPrototype = Object.getPrototypeOf;
-
-/**
- * Gets the `[[Prototype]]` of `value`.
- *
- * @private
- * @param {*} value The value to query.
- * @returns {null|Object} Returns the `[[Prototype]]`.
- */
-function getPrototype(value) {
-  return nativeGetPrototype(Object(value));
-}
-
-module.exports = getPrototype;
-
-},{}],4:[function(require,module,exports){
-/**
- * Checks if `value` is a host object in IE < 9.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a host object, else `false`.
- */
-function isHostObject(value) {
-  // Many host objects are `Object` objects that can coerce to strings
-  // despite having improperly defined `toString` methods.
-  var result = false;
-  if (value != null && typeof value.toString != 'function') {
-    try {
-      result = !!(value + '');
-    } catch (e) {}
-  }
-  return result;
-}
-
-module.exports = isHostObject;
-
-},{}],5:[function(require,module,exports){
-/**
- * Checks if `value` is object-like. A value is object-like if it's not `null`
- * and has a `typeof` result of "object".
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
- * @example
- *
- * _.isObjectLike({});
- * // => true
- *
- * _.isObjectLike([1, 2, 3]);
- * // => true
- *
- * _.isObjectLike(_.noop);
- * // => false
- *
- * _.isObjectLike(null);
- * // => false
- */
-function isObjectLike(value) {
-  return !!value && typeof value == 'object';
-}
-
-module.exports = isObjectLike;
-
-},{}],6:[function(require,module,exports){
-var getPrototype = require('./_getPrototype'),
-    isHostObject = require('./_isHostObject'),
-    isObjectLike = require('./isObjectLike');
-
-/** `Object#toString` result references. */
-var objectTag = '[object Object]';
-
-/** Used for built-in method references. */
-var objectProto = Object.prototype;
-
-/** Used to resolve the decompiled source of functions. */
-var funcToString = Function.prototype.toString;
-
-/** Used to check objects for own properties. */
-var hasOwnProperty = objectProto.hasOwnProperty;
-
-/** Used to infer the `Object` constructor. */
-var objectCtorString = funcToString.call(Object);
-
-/**
- * Used to resolve the
- * [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
- * of values.
- */
-var objectToString = objectProto.toString;
-
-/**
- * Checks if `value` is a plain object, that is, an object created by the
- * `Object` constructor or one with a `[[Prototype]]` of `null`.
- *
- * @static
- * @memberOf _
- * @since 0.8.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a plain object,
- *  else `false`.
- * @example
- *
- * function Foo() {
- *   this.a = 1;
- * }
- *
- * _.isPlainObject(new Foo);
- * // => false
- *
- * _.isPlainObject([1, 2, 3]);
- * // => false
- *
- * _.isPlainObject({ 'x': 0, 'y': 0 });
- * // => true
- *
- * _.isPlainObject(Object.create(null));
- * // => true
- */
-function isPlainObject(value) {
-  if (!isObjectLike(value) ||
-      objectToString.call(value) != objectTag || isHostObject(value)) {
-    return false;
-  }
-  var proto = getPrototype(value);
-  if (proto === null) {
-    return true;
-  }
-  var Ctor = hasOwnProperty.call(proto, 'constructor') && proto.constructor;
-  return (typeof Ctor == 'function' &&
-    Ctor instanceof Ctor && funcToString.call(Ctor) == objectCtorString);
-}
-
-module.exports = isPlainObject;
-
-},{"./_getPrototype":3,"./_isHostObject":4,"./isObjectLike":5}],7:[function(require,module,exports){
+},{"ms":3}],3:[function(require,module,exports){
 /**
  * Helpers.
  */
@@ -636,20 +494,20 @@ function plural(ms, n, name) {
   return Math.ceil(ms / n) + ' ' + name + 's';
 }
 
-},{}],8:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(['exports', './utils', 'lodash/isPlainObject', 'debug'], factory);
+        define(['exports', './utils', 'debug'], factory);
     } else if (typeof exports !== "undefined") {
-        factory(exports, require('./utils'), require('lodash/isPlainObject'), require('debug'));
+        factory(exports, require('./utils'), require('debug'));
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod.exports, global.utils, global.isPlainObject, global.debug);
+        factory(mod.exports, global.utils, global.debug);
         global.index = mod.exports;
     }
-})(this, function (exports, _utils, _isPlainObject, _debug) {
+})(this, function (exports, _utils, _debug) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
@@ -657,8 +515,6 @@ function plural(ms, n, name) {
     });
     exports.width = width;
     exports.maxFontSize = maxFontSize;
-
-    var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 
     var _debug2 = _interopRequireDefault(_debug);
 
@@ -700,10 +556,9 @@ function plural(ms, n, name) {
         var styledText = (0, _utils.getStyledText)(text, style);
 
         ctx.font = (0, _utils.prop)(options, 'font', null) || (0, _utils.getFont)(style, options);
-        debug('Font declaration:', ctx.font);
 
         var metrics = ctx.measureText(styledText);
-        debug(styledText, metrics.width + 'px');
+        debug(styledText, metrics.width + 'px', 'Font declaration:', ctx.font);
 
         return metrics.width;
     }
@@ -767,20 +622,20 @@ function plural(ms, n, name) {
     }
 });
 
-},{"./utils":9,"debug":1,"lodash/isPlainObject":6}],9:[function(require,module,exports){
+},{"./utils":5,"debug":1}],5:[function(require,module,exports){
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(['exports'], factory);
+        define(['exports', 'debug'], factory);
     } else if (typeof exports !== "undefined") {
-        factory(exports);
+        factory(exports, require('debug'));
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod.exports);
+        factory(mod.exports, global.debug);
         global.utils = mod.exports;
     }
-})(this, function (exports) {
+})(this, function (exports, _debug) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
@@ -794,15 +649,19 @@ function plural(ms, n, name) {
     exports.getStyledText = getStyledText;
     exports.prop = prop;
 
+    var _debug2 = _interopRequireDefault(_debug);
+
+    function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+            default: obj
+        };
+    }
+
     var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
         return typeof obj;
     } : function (obj) {
         return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
     };
-
-    /**
-     * Created by ben on 08.04.16.
-     */
 
     /**
      * Map css styles to canvas font property
@@ -815,7 +674,14 @@ function plural(ms, n, name) {
      * @returns {string}
      */
     function getFont(style, options) {
+        var debug = (0, _debug2.default)('measure-text:getFont');
         var font = [];
+
+        var fontWeight = prop(options, 'font-weight', style.getPropertyValue('font-weight'));
+        debug(fontWeight);
+        if (['normal', 'bold', 'bolder', 'lighter', '100', '200', '300', '400', '500', '600', '700', '800', '900'].indexOf(fontWeight) !== -1) {
+            font.push(fontWeight);
+        }
 
         var fontStyle = prop(options, 'font-style', style.getPropertyValue('font-style'));
         if (['normal', 'italic', 'oblique'].indexOf(fontStyle) !== -1) {
@@ -827,16 +693,20 @@ function plural(ms, n, name) {
             font.push(fontVariant);
         }
 
-        var fontWeight = prop(options, 'font-weight', style.getPropertyValue('font-weight'));
-        if (['normal', 'bold', 'bolder', 'lighter', 100, 200, 300, 400, 500, 600, 700, 800, 900].indexOf(fontWeight) !== -1) {
-            font.push(fontWeight);
+        var fontSize = prop(options, 'font-size', style.getPropertyValue('font-size'));
+        var fontSizeValue = parseFloat(fontSize);
+        var fontSizeUnit = fontSize.replace(fontSizeValue, '');
+        switch (fontSizeUnit) {
+            case 'rem':
+            case 'em':
+                fontSizeValue *= 16;
+                break;
+            case 'pt':
+                fontSizeValue /= .75;
+                break;
         }
 
-        var fontSize = prop(options, 'font-size', style.getPropertyValue('font-size'));
-        if (/r?em/.test(fontSize)) {
-            fontSize = parseInt(fontSize, 10) * 16 + 'px';
-        }
-        font.push(fontSize);
+        font.push(fontSizeValue + 'px');
 
         var fontFamily = prop(options, 'font-family', style.getPropertyValue('font-family'));
         font.push(fontFamily);
@@ -907,5 +777,5 @@ function plural(ms, n, name) {
     }
 });
 
-},{}]},{},[8])(8)
+},{"debug":1}]},{},[4])(4)
 });
