@@ -9,31 +9,27 @@
     "email": "ben@sommerlaune.com",
     "url": "sommerlaune.com"
   },
-  "bin": "cli.js",
   "engines": {
     "node": ">=0.10.0"
   },
   "scripts": {
     "test": "xo && nyc ava",
-    "compile": "browserify src/index.js -s measureText -t babelify --outfile dist/measure-text.js && uglifyjs dist/measure-text.js -o dist/measure-text.min.js",
+    "compile": "browserify src/measure-text.js -s measureText -t babelify --outfile dist/measure-text.js && uglifyjs dist/measure-text.js -o dist/measure-text.min.js",
     "prepublish": "npm run compile"
   },
   "files": [
-    "index.js",
-    "cli.js"
+    "dist/measure-text.js"
   ],
   "browser": "dist/measure-text.js",
   "keywords": [
-    "cli-app",
-    "cli",
-    ""
+    "browser",
+    "javascript",
+    "measure",
+    "text"
   ],
   "dependencies": {
     "babelify": "^7.2.0",
-    "browserify": "^13.0.0",
-    "lodash": "^4.8.2",
-    "phridge": "^2.0.0",
-    "debug": "^2.2.0"
+    "browserify": "^13.0.0"
   },
   "devDependencies": {
     "ava": "^0.14.0",
@@ -50,9 +46,8 @@
   "xo": {
     "space": 4,
     "ignores": [
-      "lib/canvas.js",
-      "index.js",
-      "cli.js"
+      "dist/measure-text.js",
+      "dist/measure-text.min.js"
     ]
   },
   "ava": {

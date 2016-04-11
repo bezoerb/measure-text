@@ -1,7 +1,7 @@
 /* eslint-env es6, browser */
 import '../node_modules/babel-core/register';
 import test from 'ava';
-import {width, maxFontSize} from '../src/index';
+import {width, maxFontSize} from '../src/measure-text';
 
 test('Compute width for h1', t => {
     let el = document.querySelector('h1');

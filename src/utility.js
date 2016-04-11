@@ -1,6 +1,4 @@
 /* eslint-env es6, browser */
-import debugFn from 'debug';
-
 /**
  * Map css styles to canvas font property
  *
@@ -12,11 +10,9 @@ import debugFn from 'debug';
  * @returns {string}
  */
 export function getFont(style, options) {
-    let debug = debugFn('measure-text:getFont');
     let font = [];
 
     let fontWeight = prop(options, 'font-weight', style.getPropertyValue('font-weight'));
-    debug(fontWeight);
     if (['normal', 'bold', 'bolder', 'lighter', '100', '200', '300', '400', '500', '600', '700', '800', '900'].indexOf(fontWeight) !== -1) {
         font.push(fontWeight);
     }
@@ -54,25 +50,36 @@ export function getFont(style, options) {
     return font.join(' ');
 }
 
+/**
+ * check for CSSStyleDeclaration
+ *
+ * @param val
+ * @returns {bool}
+ */
 export function isCSSStyleDeclaration(val) {
     return val && typeof val.getPropertyValue === 'function';
 }
 
+/**
+ * check wether we can get computed style
+ *
+ * @param el
+ * @returns {bool}
+ */
 export function canGetComputedStyle(el) {
     return el && el.style && typeof window !== 'undefined' && typeof window.getComputedStyle === 'function';
 }
 
 /**
- * Returns true if it is a DOM element
+ * check for DOM element
  *
  * @param o
  * @retutns {bool}
  */
-
-export function isElement(o) {
+export function isElement(el) {
     return (
-        typeof HTMLElement === "object" ? o instanceof HTMLElement :
-        o && typeof o === "object" && o !== null && o.nodeType === 1 && typeof o.nodeName === "string"
+        typeof HTMLElement === "object" ? el instanceof HTMLElement :
+        el && typeof el === "object" && el !== null && el.nodeType === 1 && typeof el.nodeName === "string"
     );
 }
 
@@ -116,6 +123,14 @@ export function getStyledText(text, style) {
     }
 }
 
+/**
+ * Get property from src
+ *
+ * @param src
+ * @param attr
+ * @param defaultValue
+ * @returns {*}
+ */
 export function prop(src, attr, defaultValue) {
     return src && typeof src[attr] !== 'undefined' && src[attr] || defaultValue;
 }
