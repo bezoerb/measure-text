@@ -13,11 +13,6 @@ test('Compute width for h2', t => {
     t.is(Math.floor(width('TEST', el)), 48);
 });
 
-test('Compute width for h3', t => {
-    let el = document.querySelector('h3');
-    t.is(Math.floor(width('test', el)), 38);
-});
-
 test('Computes width', t => {
     let el = document.querySelector('h1');
     let v1 = width('-', el);
