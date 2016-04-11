@@ -1,4 +1,4 @@
-# measure-text [![Build Status](https://travis-ci.org/bezoerb/measuretext.svg?branch=master)](https://travis-ci.org/bezoerb/measuretext)
+# measure-text [![Build Status](https://travis-ci.org/bezoerb/measure-text.svg?branch=master)](https://travis-ci.org/bezoerb/measure-text)
 
 > In-Memory text measurement using canvas *alpha*
 
