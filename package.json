@@ -14,7 +14,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "nyc ava",
+    "test": "xo && nyc ava",
     "compile": "browserify src/index.js -s measureText -t babelify --outfile dist/measure-text.js && uglifyjs dist/measure-text.js -o dist/measure-text.min.js",
     "prepublish": "npm run compile"
   },

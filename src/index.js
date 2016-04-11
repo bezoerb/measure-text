@@ -1,13 +1,14 @@
+/* eslint-env es6, browser */
 import {prop, isElement, getStyle, getStyledText, getFont} from './utils';
 import debugFn from 'debug';
 
+let ctx;
 try {
-    var ctx = document.createElement('canvas').getContext('2d');
+    ctx = document.createElement('canvas').getContext('2d');
 } catch (error) {
     debugFn('measure-text:init')(error.message || error);
     throw new Error('Canvas support required');
 }
-
 
 function parseOptions(options) {
     if (options && isElement(options)) {
@@ -36,7 +37,7 @@ export function width(text, options) {
     ctx.font = prop(options, 'font', null) || getFont(style, options);
 
     let metrics = ctx.measureText(styledText);
-    debug(styledText, metrics.width + 'px','Font declaration:', ctx.font);
+    debug(styledText, metrics.width + 'px', 'Font declaration:', ctx.font);
 
     return metrics.width;
 }
@@ -61,7 +62,7 @@ export function maxFontSize(text, options) {
     };
 
     // get max width
-    let max = parseInt(prop(options, 'width') || prop(options.element, 'offsetWidth', 0),10);
+    let max = parseInt(prop(options, 'width') || prop(options.element, 'offsetWidth', 0), 10);
     debug('Computing maxFontSize for width: ' + max);
 
     // start with half the max size
@@ -88,15 +89,14 @@ export function maxFontSize(text, options) {
         }
         debug('Computed: ' + size + 'px');
         return size + 'px';
-    } else {
-        while (cur < max) {
-            cur = compute(size++);
-            debug('following round:', size + 'px', cur);
-        }
-        size--;
-        debug('Computed: ' + size + 'px');
-        return size + 'px';
     }
 
+    while (cur < max) {
+        cur = compute(size++);
+        debug('following round:', size + 'px', cur);
+    }
+    size--;
+    debug('Computed: ' + size + 'px');
+    return size + 'px';
 }
 

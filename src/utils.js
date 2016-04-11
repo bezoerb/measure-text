@@ -1,7 +1,6 @@
-/**
- * Created by ben on 08.04.16.
- */
+/* eslint-env es6, browser */
 import debugFn from 'debug';
+
 /**
  * Map css styles to canvas font property
  *
@@ -16,40 +15,40 @@ export function getFont(style, options) {
     let debug = debugFn('measure-text:getFont');
     let font = [];
 
-    let fontWeight = prop(options,'font-weight',style.getPropertyValue('font-weight'));
+    let fontWeight = prop(options, 'font-weight', style.getPropertyValue('font-weight'));
     debug(fontWeight);
     if (['normal', 'bold', 'bolder', 'lighter', '100', '200', '300', '400', '500', '600', '700', '800', '900'].indexOf(fontWeight) !== -1) {
         font.push(fontWeight);
     }
 
-    let fontStyle = prop(options,'font-style',style.getPropertyValue('font-style'));
+    let fontStyle = prop(options, 'font-style', style.getPropertyValue('font-style'));
     if (['normal', 'italic', 'oblique'].indexOf(fontStyle) !== -1) {
         font.push(fontStyle);
     }
 
-    let fontVariant = prop(options,'font-variant',style.getPropertyValue('font-variant'));
+    let fontVariant = prop(options, 'font-variant', style.getPropertyValue('font-variant'));
     if (['normal', 'small-caps'].indexOf(fontVariant) !== -1) {
         font.push(fontVariant);
     }
 
-
-
-    let fontSize = prop(options,'font-size',style.getPropertyValue('font-size'));
+    let fontSize = prop(options, 'font-size', style.getPropertyValue('font-size'));
     let fontSizeValue = parseFloat(fontSize);
-    let fontSizeUnit =fontSize.replace(fontSizeValue,'');
+    let fontSizeUnit = fontSize.replace(fontSizeValue, '');
+    // eslint-disable-next-line default-case
     switch (fontSizeUnit) {
         case 'rem':
         case 'em':
             fontSizeValue *= 16;
             break;
         case 'pt':
-            fontSizeValue /= .75;
+            fontSizeValue /= 0.75;
             break;
+
     }
 
     font.push(fontSizeValue + 'px');
 
-    let fontFamily = prop(options,'font-family',style.getPropertyValue('font-family'));
+    let fontFamily = prop(options, 'font-family', style.getPropertyValue('font-family'));
     font.push(fontFamily);
 
     return font.join(' ');
@@ -70,10 +69,10 @@ export function canGetComputedStyle(el) {
  * @retutns {bool}
  */
 
-export function isElement(o){
+export function isElement(o) {
     return (
-        typeof HTMLElement === "object" ? o instanceof HTMLElement : //DOM2
-        o && typeof o === "object" && o !== null && o.nodeType === 1 && typeof o.nodeName==="string"
+        typeof HTMLElement === "object" ? o instanceof HTMLElement :
+        o && typeof o === "object" && o !== null && o.nodeType === 1 && typeof o.nodeName === "string"
     );
 }
 
@@ -87,13 +86,16 @@ export function getStyle(options) {
         return options.style;
     }
 
-
     let el = options && isElement(options.element) && options.element;
     if (canGetComputedStyle(el)) {
         return window.getComputedStyle(el, prop(options, 'pseudoElt', null));
     }
 
-    return {getPropertyValue: function() { return ''}};
+    return {
+        getPropertyValue: function () {
+            return '';
+        }
+    };
 }
 
 /**
@@ -103,7 +105,7 @@ export function getStyle(options) {
  * @param {CSSStyleDeclaration} style
  * @returns {string}
  */
-export function getStyledText(text,style) {
+export function getStyledText(text, style) {
     switch (style.getPropertyValue('text-transform')) {
         case 'uppercase':
             return text.toUpperCase();
