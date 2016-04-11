@@ -15,7 +15,7 @@ test('Compute width for h2', t => {
 
 test('Compute width for h3', t => {
     let el = document.querySelector('h3');
-    t.is(Math.floor(width('test unicorn', el)), 124);
+    t.is(Math.floor(width('test', el)), 38);
 });
 
 test('Computes width', t => {
