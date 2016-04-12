@@ -4,12 +4,13 @@ import test from 'ava';
 import {width, maxFontSize} from '../src/index';
 
 test('Compute with without element', t => {
-    let w = width('ABCDE', {
-        'font-size': '16px',
+    let w = width('test', {
+        'font-size': '30px',
+        'font-weight': '500',
         'font-family': 'Helvetica, Arial, sans-serif'
     });
 
-    t.is(Math.floor(w), 55);
+    t.is(Math.floor(w), 48);
 });
 
 test('Compute width for h1', t => {
