@@ -28,7 +28,7 @@ You should be able to do nearly anything, and then skip to the next section anyw
 
 measure-text needs some browser environment to run.
 ```javascript
-import measureText = from 'bezoerb-measure-text';
+import import * as measureText from 'bezoerb-measure-text';
 
 measureText.width('unicorns',document.querySelector('h1'));
 ```
