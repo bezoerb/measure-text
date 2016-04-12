@@ -52,7 +52,7 @@
         var font = [];
 
         var fontWeight = prop(options, 'font-weight', style.getPropertyValue('font-weight'));
-        if (['normal', 'bold', 'bolder', 'lighter', '100', '200', '300', '400', '500', '600', '700', '800', '900'].indexOf(fontWeight) !== -1) {
+        if (['normal', 'bold', 'bolder', 'lighter', '100', '200', '300', '400', '500', '600', '700', '800', '900'].indexOf(fontWeight.toString()) !== -1) {
             font.push(fontWeight);
         }
 
