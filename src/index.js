@@ -8,6 +8,7 @@ try {
     throw new Error('Canvas support required');
 }
 
+
 function parseOptions(options) {
     if (options && isElement(options)) {
         return {element: options};
