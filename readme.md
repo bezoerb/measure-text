@@ -49,10 +49,15 @@ define(['measure-text'], function(measureText) {
 measureText.width('unicorns',document.querySelector('h1'));
 </script>
 ```
-## Documentation
 
-* `measureText.width(<text>,<options>|<element>)` method.
-* `measureText.maxFontSize(<text>,<options>|<element>)` method.
+
+## API
+
+#### measureText.width(text, [element | options])
+Compute text width.
+
+#### measureText.maxFontSize(text, [element | options])
+Compute max fontsize to fit element.
 
 ### text
 
@@ -73,37 +78,48 @@ The element used to fetch styles from.
 ##### font-weight
 
 Type: `string`<br>
-Default: `undefined`<br>
-Allowed: `normal`, `bold`, `bolder`, `lighter`, `100`, `200`, `300`, `400`, `500`, `600`, `700`, `800`, `900`<br>
-can be used to overwrite elements font-weight.
+Default: `400`<br>
+Allowed: `normal`, `bold`, `bolder`, `lighter`, `100`, `200`, `300`, `400`, `500`, `600`, `700`, `800`, `900`
+
+Takes precedence over computed element style. Default value is set when no element is available.
 
 ##### font-style
 
 Type: `string`<br>
-Default: `undefined`
-Allowed: `normal`, `italic`, `oblique`<br>
-can be used to overwrite elements font-style.
+Default: `normal`
+Allowed: `normal`, `italic`, `oblique`
+
+Takes precedence over computed element style. Default value is set when no element is available.
 
 ##### font-variant
 
 Type: `string`<br>
-Default: `undefined`
+Default: `normal`
 Allowed: `normal`, `small-caps`
-can be used to overwrite elements font-variant.
+
+Takes precedence over computed element style. Default value is set when no element is available.
 
 ##### font-size
 
 Type: `string`<br>
-Default: `undefined`
+Default: `16px`
 
-can be used to overwrite elements font-size.
+Takes precedence over computed element style. Default value is set when no element is available.
 
 ##### font-family
 
 Type: `string`<br>
+Default: `Helvetica, Arial, sans-serif`
+
+Takes precedence over computed element style. Default value is set when no element is available.
+
+##### width
+
+Type: `string`<br>
 Default: `undefined`
 
-can be used to overwrite elements font-family.
+Used for `getMaxFontSize`
+Takes precedence over element offsetWidth.
 
 ## License
 Copyright (c) 2016 Ben Zörb
@@ -138,34 +154,6 @@ measureText.width('unicorns',h1);
 // -> 37.7978515625
 </script>
 ```
-
-
-
-## API
-
-### measureText.width(text, element, [options])
-
-#### text
-
-Type: `string`
-
-The text to measure
-
-#### element
-
-Type: `HTMLElement`
-
-The HTML element which ashould be checked
-
-#### options
-
-##### foo
-
-Type: `boolean`<br>
-Default: `false`
-
-Lorem ipsum.
-
 
 
 ## License

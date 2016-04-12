@@ -1,117 +1,6 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.measureText = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(['exports', './utility'], factory);
-    } else if (typeof exports !== "undefined") {
-        factory(exports, require('./utility'));
-    } else {
-        var mod = {
-            exports: {}
-        };
-        factory(mod.exports, global.utility);
-        global.measureText = mod.exports;
-    }
-})(this, function (exports, _utility) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.width = width;
-    exports.maxFontSize = maxFontSize;
-
-
-    var ctx = void 0; /* eslint-env es6, browser */
-
-    try {
-        ctx = document.createElement('canvas').getContext('2d');
-    } catch (error) {
-        throw new Error('Canvas support required');
-    }
-
-    function parseOptions(options) {
-        if (options && (0, _utility.isElement)(options)) {
-            return { element: options };
-        } else if (options && (0, _utility.isElement)(options.element)) {
-            return options;
-        }
-
-        throw new Error('Missing element');
-    }
-
-    /**
-     * Compute Text Metrics based for given text
-     *
-     * @param {string} text
-     * @param {object|Element} options
-     * @returns {function}
-     */
-    function width(text, options) {
-        options = parseOptions(options);
-
-        var style = (0, _utility.getStyle)(options);
-        var styledText = (0, _utility.getStyledText)(text, style);
-
-        ctx.font = (0, _utility.prop)(options, 'font', null) || (0, _utility.getFont)(style, options);
-
-        var metrics = ctx.measureText(styledText);
-
-        return metrics.width;
-    }
-
-    /**
-     * Compute Text Metrics based for given text
-    
-     * @returns {function}
-     */
-
-    function maxFontSize(text, options) {
-        options = parseOptions(options);
-
-        // add computed style to options to prevent multiple expensive getComputedStyle calls
-        options.style = (0, _utility.getStyle)(options);
-
-        // simple compute function which adds the size and computes the with
-        var compute = function compute(size) {
-            options['font-size'] = size + 'px';
-            return width(text, options);
-        };
-
-        // get max width
-        var max = parseInt((0, _utility.prop)(options, 'width') || (0, _utility.prop)(options.element, 'offsetWidth', 0), 10);
-
-        // start with half the max size
-        var size = Math.floor(max / 2);
-        var cur = compute(size);
-
-        // compute next result based on first result
-        size = Math.floor(size / cur * max);
-        cur = compute(size);
-
-        // happy cause we got it already
-        if (Math.ceil(cur) === max) {
-            return size + 'px';
-        }
-
-        // go on by increase/decrease pixels
-        if (cur > max && size > 0) {
-            while (cur > max && size > 0) {
-                cur = compute(size--);
-            }
-            return size + 'px';
-        }
-
-        while (cur < max) {
-            cur = compute(size++);
-        }
-        size--;
-        return size + 'px';
-    }
-});
-
-},{"./utility":2}],2:[function(require,module,exports){
-(function (global, factory) {
-    if (typeof define === "function" && define.amd) {
         define(['exports'], factory);
     } else if (typeof exports !== "undefined") {
         factory(exports);
@@ -120,7 +9,7 @@
             exports: {}
         };
         factory(mod.exports);
-        global.utility = mod.exports;
+        global.index = mod.exports;
     }
 })(this, function (exports) {
     'use strict';
@@ -128,13 +17,13 @@
     Object.defineProperty(exports, "__esModule", {
         value: true
     });
-    exports.getFont = getFont;
     exports.isCSSStyleDeclaration = isCSSStyleDeclaration;
     exports.canGetComputedStyle = canGetComputedStyle;
     exports.isElement = isElement;
     exports.getStyle = getStyle;
     exports.getStyledText = getStyledText;
-    exports.prop = prop;
+    exports.width = width;
+    exports.maxFontSize = maxFontSize;
 
     var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
         return typeof obj;
@@ -143,6 +32,12 @@
     };
 
     /* eslint-env es6, browser */
+    var DEFAULTS = {
+        'font-size': '16px',
+        'font-weight': '400',
+        'font-family': 'Helvetica, Arial, sans-serif'
+    };
+
     /**
      * Map css styles to canvas font property
      *
@@ -217,7 +112,7 @@
     /**
      * check for DOM element
      *
-     * @param o
+     * @param el
      * @retutns {bool}
      */
     function isElement(el) {
@@ -233,15 +128,13 @@
         if (isCSSStyleDeclaration(options.style)) {
             return options.style;
         }
-
         var el = options && isElement(options.element) && options.element;
         if (canGetComputedStyle(el)) {
             return window.getComputedStyle(el, prop(options, 'pseudoElt', null));
         }
-
         return {
-            getPropertyValue: function getPropertyValue() {
-                return '';
+            getPropertyValue: function getPropertyValue(key) {
+                return prop(options, key);
             }
         };
     }
@@ -274,6 +167,94 @@
      */
     function prop(src, attr, defaultValue) {
         return src && typeof src[attr] !== 'undefined' && src[attr] || defaultValue;
+    }
+
+    function parseOptions(options) {
+        if (options && isElement(options)) {
+            options = { element: options };
+        } else {
+            // set defaults
+            options['font-size'] = options['font-size'] || DEFAULTS['font-size'];
+            options['font-weight'] = options['font-weight'] || DEFAULTS['font-weight'];
+            options['font-family'] = options['font-family'] || DEFAULTS['font-family'];
+        }
+
+        return options;
+    }
+
+    /**
+     * Compute Text Metrics based for given text
+     *
+     * @param {string} text
+     * @param {object|Element} options
+     * @returns {function}
+     */
+    function width(text, options) {
+        options = parseOptions(options);
+
+        var style = getStyle(options);
+        var styledText = getStyledText(text, style);
+
+        var ctx = void 0;
+        try {
+            ctx = document.createElement('canvas').getContext('2d');
+            ctx.font = prop(options, 'font', null) || getFont(style, options);
+        } catch (error) {
+            throw new Error('Canvas support required');
+        }
+
+        var metrics = ctx.measureText(styledText);
+
+        return metrics.width;
+    }
+
+    /**
+     * Compute Text Metrics based for given text
+    
+     * @returns {function}
+     */
+
+    function maxFontSize(text, options) {
+        options = parseOptions(options);
+
+        // add computed style to options to prevent multiple expensive getComputedStyle calls
+        options.style = getStyle(options);
+
+        // simple compute function which adds the size and computes the with
+        var compute = function compute(size) {
+            options['font-size'] = size + 'px';
+            return width(text, options);
+        };
+
+        // get max width
+        var max = parseInt(prop(options, 'width') || prop(options.element, 'offsetWidth', 0), 10);
+
+        // start with half the max size
+        var size = Math.floor(max / 2);
+        var cur = compute(size);
+
+        // compute next result based on first result
+        size = Math.floor(size / cur * max);
+        cur = compute(size);
+
+        // happy cause we got it already
+        if (Math.ceil(cur) === max) {
+            return size + 'px';
+        }
+
+        // go on by increase/decrease pixels
+        if (cur > max && size > 0) {
+            while (cur > max && size > 0) {
+                cur = compute(size--);
+            }
+            return size + 'px';
+        }
+
+        while (cur < max) {
+            cur = compute(size++);
+        }
+        size--;
+        return size + 'px';
     }
 });
 

@@ -1,7 +1,16 @@
 /* eslint-env es6, browser */
 import '../node_modules/babel-core/register';
 import test from 'ava';
-import {width, maxFontSize} from '../src/measure-text';
+import {width, maxFontSize} from '../src/index';
+
+test('Compute with without element', t => {
+    let w = width('ABCDE', {
+        'font-size': '16px',
+        'font-family': 'Helvetica, Arial, sans-serif'
+    });
+
+    t.is(Math.floor(w), 55);
+});
 
 test('Compute width for h1', t => {
     let el = document.querySelector('h1');
