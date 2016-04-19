@@ -27,7 +27,9 @@
     "browser",
     "javascript",
     "measure",
-    "text"
+    "text",
+    "fit-text",
+    "font-size"
   ],
   "dependencies": {
     "babelify": "^7.2.0",
