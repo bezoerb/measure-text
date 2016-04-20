@@ -1,5 +1,5 @@
 # measure-text
-[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url] [![Download][dlcounter-image]][dlcounter-url]
+[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url] [![Download][dlcounter-image]][dlcounter-url] [![Coverage Status][coveralls-image]][coveralls-url]
 
 > In-memory text measurement using canvas
 
@@ -137,6 +137,8 @@ Licensed under the [MIT license](http://bezoerb.mit-license.org/).
 [dlcounter-url]: https://www.npmjs.com/package/measure-text
 [dlcounter-image]: https://img.shields.io/npm/dm/measure-text.svg
 
+[coveralls-url]: https://coveralls.io/github/bezoerb/measure-text?branch=master
+[coveralls-image]: https://coveralls.io/repos/github/bezoerb/measure-text/badge.svg?branch=master
 
 
 
