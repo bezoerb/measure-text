@@ -9,7 +9,9 @@
   "keywords": [
     "text",
     "canvas",
-    "measure"
+    "measure",
+    "width",
+    "font-size"
   ],
   "homepage": "https://github.com/bezoerb/measure-text",
   "moduleType": [
