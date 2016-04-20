@@ -17,3 +17,6 @@ env:
   - CXX=g++-4.8
 before_install:
   - npm explore npm -g -- npm install node-gyp@latest
+
+after_success:
+  - './node_modules/.bin/nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls'
