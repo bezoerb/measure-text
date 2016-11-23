@@ -84,8 +84,8 @@ export function canGetComputedStyle(el) {
  */
 export function isElement(el) {
     return (
-        typeof HTMLElement === "object" ? el instanceof HTMLElement :
-        el && typeof el === "object" && el !== null && el.nodeType === 1 && typeof el.nodeName === "string"
+        typeof HTMLElement === 'object' ? el instanceof HTMLElement :
+        el && typeof el === 'object' && el !== null && el.nodeType === 1 && typeof el.nodeName === 'string'
     );
 }
 
@@ -134,7 +134,7 @@ export function getStyledText(text, style) {
  * @returns {*}
  */
 function prop(src, attr, defaultValue) {
-    return src && typeof src[attr] !== 'undefined' && src[attr] || defaultValue;
+    return (src && typeof src[attr] !== 'undefined' && src[attr]) || defaultValue;
 }
 
 function parseOptions(options) {
@@ -167,7 +167,7 @@ export function width(text, options) {
     try {
         ctx = document.createElement('canvas').getContext('2d');
         ctx.font = prop(options, 'font', null) || getFont(style, options);
-    } catch (error) {
+    } catch (err) {
         throw new Error('Canvas support required');
     }
 

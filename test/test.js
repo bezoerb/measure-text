@@ -1,4 +1,5 @@
 /* eslint-env es6, browser */
+// eslint-disable-next-line import/no-unassigned-import
 import '../node_modules/babel-core/register';
 import test from 'ava';
 import {width, maxFontSize} from '../src/index';
@@ -29,7 +30,7 @@ test('Computes width', t => {
     let v2 = width('--', el);
     let v3 = width('---', el);
 
-    t.truthy(v1 < v2 < v3);
+    t.true(v1 < v2 < v3);
 });
 
 test('Computes maxFontSize', t => {

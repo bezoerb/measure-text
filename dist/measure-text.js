@@ -14,16 +14,7 @@
 })(this, function (exports) {
     'use strict';
 
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.isCSSStyleDeclaration = isCSSStyleDeclaration;
-    exports.canGetComputedStyle = canGetComputedStyle;
-    exports.isElement = isElement;
-    exports.getStyle = getStyle;
-    exports.getStyledText = getStyledText;
-    exports.width = width;
-    exports.maxFontSize = maxFontSize;
+    /* eslint-env es6, browser */
 
     var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
         return typeof obj;
@@ -31,7 +22,6 @@
         return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
     };
 
-    /* eslint-env es6, browser */
     var DEFAULTS = {
         'font-size': '16px',
         'font-weight': '400',
@@ -256,6 +246,14 @@
         size--;
         return size + 'px';
     }
+
+    exports.isCSSStyleDeclaration = isCSSStyleDeclaration;
+    exports.canGetComputedStyle = canGetComputedStyle;
+    exports.isElement = isElement;
+    exports.getStyle = getStyle;
+    exports.getStyledText = getStyledText;
+    exports.width = width;
+    exports.maxFontSize = maxFontSize;
 });
 
 },{}]},{},[1])(1)
