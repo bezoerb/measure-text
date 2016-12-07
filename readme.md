@@ -140,8 +140,8 @@ Licensed under the [MIT license](http://bezoerb.mit-license.org/).
 [depstat-url]: https://david-dm.org/bezoerb/measure-text
 [depstat-image]: https://david-dm.org/bezoerb/measure-text.svg
 
-[dlcounter-url]: https://www.npmjs.com/package/measure-text
-[dlcounter-image]: https://img.shields.io/npm/dm/measure-text.svg
+[dlcounter-url]: https://www.npmjs.com/package/bezoerb-measure-text
+[dlcounter-image]: https://img.shields.io/npm/dm/bezoerb-measure-text.svg
 
 [coveralls-url]: https://coveralls.io/github/bezoerb/measure-text?branch=master
 [coveralls-image]: https://coveralls.io/repos/github/bezoerb/measure-text/badge.svg?branch=master
