@@ -187,7 +187,7 @@ export function width(text, options) {
     }
 
     if (options.multiline) {
-        return computeLinebreaks(styledText, {...options, style}).reduce((res, text) => {
+        return computeLinebreaks(styledText, Object.assign({}, options, {style})).reduce((res, text) => {
             return Math.max(res, ctx.measureText(text).width);
         }, 0);
     }
@@ -267,7 +267,7 @@ export function height(text, options) {
     const style = getStyle(options);
     const lineHeight = parseInt(prop(options, 'line-height') || style.getPropertyValue('line-height'), 10);
 
-    return computeLinebreaks(text, {...options, style}).length * lineHeight;
+    return computeLinebreaks(text, Object.assign({}, options, {style})).length * lineHeight;
 }
 
 /**

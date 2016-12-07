@@ -160,17 +160,34 @@
         return src && typeof src[attr] !== 'undefined' && src[attr] || defaultValue;
     }
 
+    /**
+     * Normalize options
+     *
+     * @param options
+     * @returns {*}
+     */
     function parseOptions(options) {
-        if (options && isElement(options)) {
-            options = { element: options };
-        } else {
-            // set defaults
-            options['font-size'] = options['font-size'] || DEFAULTS['font-size'];
-            options['font-weight'] = options['font-weight'] || DEFAULTS['font-weight'];
-            options['font-family'] = options['font-family'] || DEFAULTS['font-family'];
+        // no option set
+        if (isElement(options)) {
+            return { element: options };
         }
 
-        return options;
+        // normalize keys (fontSize => font-size)
+        if ((typeof options === 'undefined' ? 'undefined' : _typeof(options)) === 'object') {
+            Object.keys(options).forEach(function (key) {
+                var dashedKey = key.replace(/([A-Z])/g, function ($1) {
+                    return '-' + $1.toLowerCase();
+                });
+                options[dashedKey] = options[key];
+            });
+        }
+
+        // don't set defaults if we got an element
+        if (options && isElement(options.element)) {
+            return options;
+        }
+
+        return Object.assign({}, DEFAULTS, options || {});
     }
 
     /**
@@ -194,13 +211,17 @@
             throw new Error('Canvas support required');
         }
 
-        var metrics = ctx.measureText(styledText);
+        if (options.multiline) {
+            return computeLinebreaks(styledText, Object.assign({}, options, { style: style })).reduce(function (res, text) {
+                return Math.max(res, ctx.measureText(text).width);
+            }, 0);
+        }
 
-        return metrics.width;
+        return ctx.measureText(styledText).width;
     }
 
     /**
-     * compute lines of text with automatic word wraparound based on containing
+     * compute lines of text with automatic word wraparound
      * element styles
      *
      * @param text
@@ -210,14 +231,13 @@
     function computeLinebreaks(text, options) {
         options = parseOptions(options);
 
-        // get max width
-        var max = parseInt(prop(options, 'width') || prop(options.element, 'offsetWidth', 0), 10);
-        var delimiter = prop(options, 'delimiter', ' ');
         var style = getStyle(options);
+        // get max width
+        var max = parseInt(prop(options, 'width') || prop(options.element, 'offsetWidth', 0) || style.getPropertyValue('width'), 10);
+        var delimiter = prop(options, 'delimiter', ' ');
+
         var styledText = getStyledText(text, style);
         var words = styledText.split(delimiter);
-
-        console.log('MAX:', max);
 
         if (words.length === 0) {
             return 0;
@@ -227,7 +247,6 @@
         try {
             ctx = document.createElement('canvas').getContext('2d');
             ctx.font = prop(options, 'font', null) || getFont(style, options);
-            console.log(ctx.font);
         } catch (err) {
             throw new Error('Canvas support required');
         }
@@ -268,13 +287,9 @@
     function height(text, options) {
         options = parseOptions(options);
         var style = getStyle(options);
-        var lineHeight = parseInt(prop(options, 'width') || style.getPropertyValue('line-height'), 10);
+        var lineHeight = parseInt(prop(options, 'line-height') || style.getPropertyValue('line-height'), 10);
 
-        options.style = style;
-
-        var lines = computeLinebreaks(text, options);
-
-        return lines.length * lineHeight;
+        return computeLinebreaks(text, Object.assign({}, options, { style: style })).length * lineHeight;
     }
 
     /**
@@ -296,7 +311,8 @@
         };
 
         // get max width
-        var max = parseInt(prop(options, 'width') || prop(options.element, 'offsetWidth', 0), 10);
+        // get max width
+        var max = parseInt(prop(options, 'width') || prop(options.element, 'offsetWidth', 0) || options.style.getPropertyValue('width'), 10);
 
         // start with half the max size
         var size = Math.floor(max / 2);
