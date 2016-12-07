@@ -2,12 +2,12 @@
 // eslint-disable-next-line import/no-unassigned-import
 import '../node_modules/babel-core/register';
 import test from 'ava';
-import {width, maxFontSize} from '../src/index';
+import {width, height, computeLinebreaks, maxFontSize} from '../src/index';
 
 test('Compute with without element', t => {
     let w = width('test', {
         'font-size': '30px',
-        'font-weight': '500',
+        'font-weight': '400',
         'font-family': 'Helvetica, Arial, sans-serif'
     });
 
@@ -36,5 +36,42 @@ test('Computes width', t => {
 test('Computes maxFontSize', t => {
     let el = document.querySelector('#max-font-size');
 
-    t.is(maxFontSize('unicorn', {element: el, width: '600px'}), '183px');
+    t.is(maxFontSize('unicorn', el), '183px');
+});
+
+test('Computes lines', t => {
+    let el = document.querySelector('#height');
+
+    const text = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam atque cum dolor explicabo incidunt.';
+    const expected = [
+        'Lorem ipsum',
+        'dolor sit amet,',
+        'consectetur',
+        'adipisicing elit.',
+        'Aliquam atque',
+        'cum dolor',
+        'explicabo',
+        'incidunt.'
+    ];
+
+    const value = computeLinebreaks(text, el);
+
+    t.is(value.length, expected.length);
+
+    for (let i = 0; i < value.length; i++) {
+        t.is(value[i], expected[i]);
+    }
+});
+
+test('Computes height', t => {
+    const text = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam atque cum dolor explicabo incidunt.';
+    const val = height(text, {
+        'font-size': '14px',
+        'line-height': '20px',
+        'font-family': 'Helvetica, Arial, sans-serif',
+        'font-weight': '400',
+        width: 100
+    });
+
+    t.is(val, 160);
 });

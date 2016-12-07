@@ -137,17 +137,32 @@ function prop(src, attr, defaultValue) {
     return (src && typeof src[attr] !== 'undefined' && src[attr]) || defaultValue;
 }
 
+/**
+ * Normalize options
+ *
+ * @param options
+ * @returns {*}
+ */
 function parseOptions(options) {
-    if (options && isElement(options)) {
-        options = {element: options};
-    } else {
-        // set defaults
-        options['font-size'] = options['font-size'] || DEFAULTS['font-size'];
-        options['font-weight'] = options['font-weight'] || DEFAULTS['font-weight'];
-        options['font-family'] = options['font-family'] || DEFAULTS['font-family'];
+    // no option set
+    if (isElement(options)) {
+        return {element: options};
     }
 
-    return options;
+    // normalize keys (fontSize => font-size)
+    if (typeof options === 'object') {
+        Object.keys(options).forEach(key => {
+            const dashedKey = key.replace(/([A-Z])/g, $1 => `-${$1.toLowerCase()}`);
+            options[dashedKey] = options[key];
+        });
+    }
+
+    // don't set defaults if we got an element
+    if (options && isElement(options.element)) {
+        return options;
+    }
+
+    return Object.assign({}, DEFAULTS, options || {});
 }
 
 /**
@@ -171,9 +186,88 @@ export function width(text, options) {
         throw new Error('Canvas support required');
     }
 
-    let metrics = ctx.measureText(styledText);
+    if (options.multiline) {
+        return computeLinebreaks(styledText, {...options, style}).reduce((res, text) => {
+            return Math.max(res, ctx.measureText(text).width);
+        }, 0);
+    }
 
-    return metrics.width;
+    return ctx.measureText(styledText).width;
+}
+
+/**
+ * compute lines of text with automatic word wraparound based on containing
+ * element styles
+ *
+ * @param text
+ * @param options
+ * @returns {*}
+ */
+export function computeLinebreaks(text, options) {
+    options = parseOptions(options);
+
+    const style = getStyle(options);
+    // get max width
+    const max = parseInt(
+        prop(options, 'width') ||
+        prop(options.element, 'offsetWidth', 0) ||
+        style.getPropertyValue('width')
+    , 10);
+    const delimiter = prop(options, 'delimiter', ' ');
+
+    const styledText = getStyledText(text, style);
+    const words = styledText.split(delimiter);
+
+    if (words.length === 0) {
+        return 0;
+    }
+
+    let ctx;
+    try {
+        ctx = document.createElement('canvas').getContext('2d');
+        ctx.font = prop(options, 'font', null) || getFont(style, options);
+    } catch (err) {
+        throw new Error('Canvas support required');
+    }
+
+    let lines = [];
+    let line = words.shift();
+
+    words.forEach((word, index) => {
+        const {width} = ctx.measureText(line + delimiter + word);
+
+        if (width <= max) {
+            line += (delimiter + word);
+        } else {
+            lines.push(line);
+            line = word;
+        }
+
+        if (index === words.length - 1) {
+            lines.push(line);
+        }
+    });
+
+    if (words.length === 0) {
+        lines.push(line);
+    }
+
+    return lines;
+}
+
+/**
+ * Compute height from textbox
+ *
+ * @param text
+ * @param options
+ * @returns {number}
+ */
+export function height(text, options) {
+    options = parseOptions(options);
+    const style = getStyle(options);
+    const lineHeight = parseInt(prop(options, 'line-height') || style.getPropertyValue('line-height'), 10);
+
+    return computeLinebreaks(text, {...options, style}).length * lineHeight;
 }
 
 /**
@@ -195,7 +289,12 @@ export function maxFontSize(text, options) {
     };
 
     // get max width
-    let max = parseInt(prop(options, 'width') || prop(options.element, 'offsetWidth', 0), 10);
+    // get max width
+    const max = parseInt(
+        prop(options, 'width') ||
+        prop(options.element, 'offsetWidth', 0) ||
+        options.style.getPropertyValue('width')
+    , 10);
 
     // start with half the max size
     let size = Math.floor(max / 2);

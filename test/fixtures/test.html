@@ -30,6 +30,13 @@
         #fullwidth {
             width: 100%;
         }
+
+        #height {
+            width: 100px;
+            display: block;
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -41,6 +48,9 @@
 <div id="max-font-size" class="fit-text">unicorn</div>
 
 <div id="fullwidth" class="fit-text"><span>Scales to full width</span></div>
+
+<div id="height">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam atque cum dolor explicabo incidunt.</div>
+<canvas id="height-canvas"></canvas>
 <canvas id="fullwidth-canvas"></canvas>
 <script>
     var elements = document.querySelectorAll('.fit-text');
@@ -67,8 +77,16 @@
     canvas2.height = 200;
     var ctx2 = canvas2.getContext('2d');
     ctx2.font = '108px Arial,sans-serif';
-
     ctx2.fillText('Scales to full width', 0, 134);
+
+    var canvas3 = document.getElementById('height-canvas');
+    canvas3.width  = 200;
+    canvas3.height = 200;
+    var ctx3 = canvas2.getContext('2d');
+    ctx3.font = '14px Helvetica, Arial, sans-serif';
+
+    ctx3.fillText('dolor sit amet, ', 0, 32);
+
 </script>
 
 </body>

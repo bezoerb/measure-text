@@ -14,14 +14,15 @@
 })(this, function (exports) {
     'use strict';
 
-    /* eslint-env es6, browser */
-
     var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
         return typeof obj;
     } : function (obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
     };
 
+    Object.defineProperty(exports, '__esModule', { value: true });
+
+    /* eslint-env es6, browser */
     var DEFAULTS = {
         'font-size': '16px',
         'font-weight': '400',
@@ -106,7 +107,7 @@
      * @retutns {bool}
      */
     function isElement(el) {
-        return (typeof HTMLElement === 'undefined' ? 'undefined' : _typeof(HTMLElement)) === "object" ? el instanceof HTMLElement : el && (typeof el === 'undefined' ? 'undefined' : _typeof(el)) === "object" && el !== null && el.nodeType === 1 && typeof el.nodeName === "string";
+        return (typeof HTMLElement === 'undefined' ? 'undefined' : _typeof(HTMLElement)) === 'object' ? el instanceof HTMLElement : el && (typeof el === 'undefined' ? 'undefined' : _typeof(el)) === 'object' && el !== null && el.nodeType === 1 && typeof el.nodeName === 'string';
     }
 
     /**
@@ -189,13 +190,91 @@
         try {
             ctx = document.createElement('canvas').getContext('2d');
             ctx.font = prop(options, 'font', null) || getFont(style, options);
-        } catch (error) {
+        } catch (err) {
             throw new Error('Canvas support required');
         }
 
         var metrics = ctx.measureText(styledText);
 
         return metrics.width;
+    }
+
+    /**
+     * compute lines of text with automatic word wraparound based on containing
+     * element styles
+     *
+     * @param text
+     * @param options
+     * @returns {*}
+     */
+    function computeLinebreaks(text, options) {
+        options = parseOptions(options);
+
+        // get max width
+        var max = parseInt(prop(options, 'width') || prop(options.element, 'offsetWidth', 0), 10);
+        var delimiter = prop(options, 'delimiter', ' ');
+        var style = getStyle(options);
+        var styledText = getStyledText(text, style);
+        var words = styledText.split(delimiter);
+
+        console.log('MAX:', max);
+
+        if (words.length === 0) {
+            return 0;
+        }
+
+        var ctx = void 0;
+        try {
+            ctx = document.createElement('canvas').getContext('2d');
+            ctx.font = prop(options, 'font', null) || getFont(style, options);
+            console.log(ctx.font);
+        } catch (err) {
+            throw new Error('Canvas support required');
+        }
+
+        var lines = [];
+        var line = words.shift();
+
+        words.forEach(function (word, index) {
+            var _ctx$measureText = ctx.measureText(line + delimiter + word),
+                width = _ctx$measureText.width;
+
+            if (width <= max) {
+                line += delimiter + word;
+            } else {
+                lines.push(line);
+                line = word;
+            }
+
+            if (index === words.length - 1) {
+                lines.push(line);
+            }
+        });
+
+        if (words.length === 0) {
+            lines.push(line);
+        }
+
+        return lines;
+    }
+
+    /**
+     * Compute height from textbox
+     *
+     * @param text
+     * @param options
+     * @returns {number}
+     */
+    function height(text, options) {
+        options = parseOptions(options);
+        var style = getStyle(options);
+        var lineHeight = parseInt(prop(options, 'width') || style.getPropertyValue('line-height'), 10);
+
+        options.style = style;
+
+        var lines = computeLinebreaks(text, options);
+
+        return lines.length * lineHeight;
     }
 
     /**
@@ -253,6 +332,8 @@
     exports.getStyle = getStyle;
     exports.getStyledText = getStyledText;
     exports.width = width;
+    exports.computeLinebreaks = computeLinebreaks;
+    exports.height = height;
     exports.maxFontSize = maxFontSize;
 });
 
