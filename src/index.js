@@ -196,7 +196,7 @@ export function width(text, options) {
 }
 
 /**
- * compute lines of text with automatic word wraparound based on containing
+ * compute lines of text with automatic word wraparound
  * element styles
  *
  * @param text

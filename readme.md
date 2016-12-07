@@ -56,8 +56,14 @@ measureText.width('unicorns',document.querySelector('h1'));
 #### measureText.width(text, [element | options])
 Compute text width.
 
+#### measureText.height(text, [element | options])
+Compute text height.
+
 #### measureText.maxFontSize(text, [element | options])
 Compute max fontsize to fit element.
+
+#### measureText.computeLinebreaks(text, [element | options])
+Compute lines of text with automatic word wraparound
 
 ### text
 
@@ -118,7 +124,7 @@ Takes precedence over computed element style. Default value is set when no eleme
 Type: `string`<br>
 Default: `undefined`
 
-Used for `getMaxFontSize`
+Used for `getMaxFontSize`, `height`, `computeLinebreaks` and `width` with multiline option.
 Takes precedence over element offsetWidth.
 
 ## License
