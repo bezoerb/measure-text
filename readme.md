@@ -3,6 +3,10 @@
 
 > In-memory text measurement using canvas
 
+## DEPRECATED
+
+Use https://github.com/bezoerb/text-metrics instead
+
 ## Features
 
 * Compute text width
